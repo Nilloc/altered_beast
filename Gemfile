@@ -10,6 +10,7 @@ gem 'RedCloth', :require => "redcloth"
 gem 'acts_as_list'
 gem 'acts_as_state_machine'
 gem 'permalink_fu'
+gem 'mysql2', '~> 0.2.7'
 
 group :development, :test do
   gem 'rspec-rails'

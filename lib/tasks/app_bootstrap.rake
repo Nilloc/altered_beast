@@ -24,10 +24,13 @@ namespace :app do
 
     unless !@restart && File.exist?(db_config)
       if @restart || agree("Would you like to create a database.yml file? [y/n]")
-        options = OpenStruct.new :host => 'localhost', :username => 'root', :adapter => 'mysql',
+        options = OpenStruct.new :host => 'localhost', :username => 'root', :adapter => 'mysql2',
           :keys => [:adapter, :host, :database, :username, :password, :socket], :pattern => /_(dev.*|prod.*|test)$/
         class << options
           def get_binding() binding end
+          def development_database
+            @development_database ||= database.get_binding(pattern, '') + '_deveopment'
+          end
           def test_database
             @test_database ||= database.gsub(pattern, '') + '_test'
           end
@@ -57,7 +60,7 @@ namespace :app do
           f.write erb.result(options.get_binding)
         end
         say "Your databases:"
-        say "Development: '#{options.database}'"
+        say "Development: '#{options.development_database}'"
         say "Production:  '#{options.database}'"
         say "Test:        '#{options.test_database}'"
       else
